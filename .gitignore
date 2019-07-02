@@ -1,2 +1,8 @@
 *.class
 *.log
+/.idea/*
+/project/*
+/target/*
+src/main/scala/test.scala
+src/main/scala/worksheet.sc
+.gitignore___jb_tmp___
