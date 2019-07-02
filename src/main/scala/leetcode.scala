@@ -15,6 +15,9 @@ object Solution {
     val l2 = new ListNode(1)
     l2.next = new ListNode(3)
     l2.next.next = new ListNode(5)
+    val l3 = new ListNode(4)
+    l3.next = new ListNode(7)
+    l3.next.next = new ListNode(8)
     var l = timer(mergeTwoLists(l1, l2))._1
     val arr = ArrayBuffer[Int]()
     while (l != null) {
@@ -22,6 +25,30 @@ object Solution {
       l = l.next
     }
     println(arr.mkString("->"))
+    var ll = timer(mergeKLists(Array(l1,l3,l2)))._1
+    while (ll != null) {
+      println(ll._x)
+      ll = ll.next
+    }
+  }
+
+  /**
+    * https://leetcode.com/problems/merge-k-sorted-lists/
+    * Merge k sorted linked lists and return it as one sorted list.
+    * Analyze and describe its complexity.
+    *
+    * @param lists sorted lists
+    * @return
+    */
+  def mergeKLists(lists: Array[ListNode]): ListNode = {
+    if (lists.isEmpty) return null
+    if (lists.length == 1) return lists(0)
+    if (lists.length == 2) return mergeTwoLists(lists(0), lists(1))
+    var l = lists.head
+    lists.tail.foreach(list => {
+      l = mergeTwoLists(l,list)
+    })
+    l
   }
 
   /**
