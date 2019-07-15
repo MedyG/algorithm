@@ -3,14 +3,48 @@ import Utils._
 
 import scala.collection.mutable.ArrayBuffer
 
-object leetcode {
-
-}
+object leetcode {}
 
 object Solution {
   def main(args: Array[String]): Unit = {
     println(maxArea(Array[Int](1, 8, 6, 2, 5, 4, 8, 3, 7)))
     println(timer(strStr("a", "")))
+  }
+
+  /**
+    * https://leetcode.com/problems/valid-sudoku/
+    * Determine if a 9x9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+    *
+    * Each row must contain the digits 1-9 without repetition.
+    * Each column must contain the digits 1-9 without repetition.
+    * Each of the 9 3x3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+    *
+    * @param board
+    * @return
+    */
+  def isValidSudoku(board: Array[Array[Char]]): Boolean = {
+    val grid = Array.ofDim[Boolean](3, 3, 9)
+
+    for (i <- 0 until 9) {
+      val existRow = Array.ofDim[Boolean](9)
+      val existCol = Array.ofDim[Boolean](9)
+      for (j <- 0 until 9) {
+        val (x, y) = (i / 3, j / 3)
+        if (board(i)(j) != '.') {
+          val k: Int = board(i)(j).toInt - 49
+          if (!existRow(k)) existRow(k) = true
+          else return false
+          if (!grid(x)(y)(k)) grid(x)(y)(k) = true
+          else return false
+        }
+        if (board(j)(i) != '.') {
+          val k = board(j)(i).toInt - 49
+          if (!existCol(k)) existCol(k) = true
+          else return false
+        }
+      }
+    }
+    true
   }
 
   /**
@@ -56,7 +90,8 @@ object Solution {
     var left = 0
     var right: Int = height.length - 1
     while (left < right) {
-      max = math.max(max, math.min(height(left), height(right)) * (right - left))
+      max =
+        math.max(max, math.min(height(left), height(right)) * (right - left))
       if (height(left) < height(right)) {
         left += 1
       } else {
@@ -79,7 +114,7 @@ object Solution {
     */
   def searchInsert(nums: Array[Int], target: Int): Int = {
     var i = 0
-    nums.foreach(n => {
+    nums.foreach((n: Int) => {
       if (n < target) {
         i += 1
       } else {
@@ -101,8 +136,8 @@ object Solution {
     if (lists.isEmpty) return null
     if (lists.length == 1) return lists(0)
     if (lists.length == 2) return mergeTwoLists(lists(0), lists(1))
-    var l = lists.head
-    lists.tail.foreach(list => {
+    var l: ListNode = lists.head
+    lists.tail.foreach((list: ListNode) => {
       l = mergeTwoLists(l, list)
     })
     l
@@ -127,18 +162,17 @@ object Solution {
     if (l2 == null) return l1
     var curl1: ListNode = l1
     var curl2: ListNode = l2
-    val l = if (curl1._x <= curl2._x) {
-      val begin = curl1._x
+    val l: ListNode = if (curl1._x <= curl2._x) {
+      val begin: Int = curl1._x
       curl1 = curl1.next
       new ListNode(begin)
-    }
-    else {
-      val begin = curl2._x
+    } else {
+      val begin: Int = curl2._x
       curl2 = curl2.next
       new ListNode(begin)
     }
 
-    var curl = l
+    var curl: ListNode = l
     while (curl1 != null && curl2 != null) {
       if (curl1._x <= curl2._x) {
         curl.next = new ListNode(curl1._x)
@@ -187,14 +221,16 @@ object Solution {
     alpha.put('9', List("w", "x", "y", "z"))
     if (digits.length == 1) return alpha(digits(0))
     queue ++= alpha(digits(0))
-    digits.substring(1).foreach(c => {
-      var l = queue.length
-      while (l > 0) {
-        val head = queue.dequeue()
-        queue ++= alpha(c).map(a => head + a)
-        l -= 1
-      }
-    })
+    digits
+      .substring(1)
+      .foreach((c: Char) => {
+        var l: Int = queue.length
+        while (l > 0) {
+          val head: String = queue.dequeue()
+          queue ++= alpha(c).map((a: String) => head + a)
+          l -= 1
+        }
+      })
     queue.toList
   }
 
@@ -226,24 +262,24 @@ object Solution {
     if (nums.length < 3) {
       return threesum.toList
     }
-    if (nums.count(r => r == 0) >= 3) threesum += List(0, 0, 0)
-    if (!nums.exists(r => r > 0)) return threesum.toList
-    if (!nums.exists(r => r < 0)) return threesum.toList
+    if (nums.count((r: Int) => r == 0) >= 3) threesum += List(0, 0, 0)
+    if (!nums.exists((r: Int) => r > 0)) return threesum.toList
+    if (!nums.exists((r: Int) => r < 0)) return threesum.toList
 
     var i = 0
     while (i < nums.length - 2) {
-      val a = nums(i)
-      var j = i + 1
-      var k = nums.length - 1
+      val a: Int = nums(i)
+      var j: Int = i + 1
+      var k: Int = nums.length - 1
       while (j < k) {
-        val sum = -nums(j) - nums(k)
+        val sum: Int = -nums(j) - nums(k)
         if (sum < a) {
           k -= 1
         } else if (sum > a) {
           j += 1
         } else {
-          val b = nums(j)
-          val c = nums(k)
+          val b: Int = nums(j)
+          val c: Int = nums(k)
           threesum += List(a, b, c)
 
           while (j < k && nums(j) == b) j += 1
