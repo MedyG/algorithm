@@ -1,4 +1,5 @@
 //import scala.util.Sorting
+
 import Utils._
 
 import scala.collection.mutable.ArrayBuffer
@@ -7,8 +8,37 @@ object leetcode {}
 
 object Solution {
   def main(args: Array[String]): Unit = {
-    println(maxArea(Array[Int](1, 8, 6, 2, 5, 4, 8, 3, 7)))
-    println(timer(strStr("a", "")))
+    println(permute(Array(1,2,3,4)))
+
+  }
+
+  /**
+    * https://leetcode.com/problems/permutations/
+    * Given a collection of distinct integers, return all possible permutations.
+    *
+    * @param nums
+    * @return
+    */
+  def permute(nums: Array[Int]): List[List[Int]] = {
+    if (nums.isEmpty) return List(List[Int]())
+
+    @scala.annotation.tailrec
+    def permute(pos: Int, permutaion: List[List[Int]]): List[List[Int]] = {
+      if (pos >= nums.length) return permutaion
+      val num: Int = nums(pos)
+      var result = List[List[Int]]()
+      permutaion.foreach(
+        (list: List[Int]) =>
+          for (i <- 0 until pos + 1) {
+            result = result ::: List(
+              list.take(i) ::: List(num) ::: list.takeRight(pos - i)
+            )
+          }
+      )
+      permute(pos + 1, result)
+    }
+
+    permute(1, List(List(nums(0))))
   }
 
   /**
