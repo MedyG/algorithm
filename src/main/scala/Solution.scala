@@ -1,15 +1,51 @@
-//import scala.util.Sorting
-
-import Utils._
-
-import scala.collection.mutable.ArrayBuffer
-
-object leetcode {}
 
 object Solution {
   def main(args: Array[String]): Unit = {
-    println(permute(Array(1,2,3,4)))
+    //    println(permute(Array(1, 1, 2)))
+    //    println(permuteUnique(Array(1, 1,2,2)))
 
+
+  }
+
+  /**
+    * https://leetcode.com/problems/permutations-ii/
+    * Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+    *
+    * @param nums
+    * @return
+    */
+  def permuteUnique(nums: Array[Int]): List[List[Int]] = {
+    if (nums.isEmpty) return List(List[Int]())
+    scala.util.Sorting.quickSort(nums)
+
+    @scala.annotation.tailrec
+    def permuteUnique(pos: Int, permutaion: List[List[Int]]): List[List[Int]] = {
+      if (pos >= nums.length) return permutaion
+      val num: Int = nums(pos)
+      var result = List[List[Int]]()
+      permutaion.foreach(
+        (list: List[Int]) =>{
+          var jumped = false
+          for (i <- 0 until pos + 1) {
+            if (nums(i) != num) {
+              jumped = false
+              result = result ::: List(
+                list.take(i) ::: List(num) ::: list.takeRight(pos - i)
+              )
+            }
+            else if (!jumped){
+              jumped = true
+              result = result ::: List(list.take(i) ::: List(num) ::: list.takeRight(pos - i))
+            }
+
+          }
+        }
+
+      )
+      permuteUnique(pos + 1, result)
+    }
+
+    permuteUnique(1, List(List(nums(0)))).toList
   }
 
   /**
