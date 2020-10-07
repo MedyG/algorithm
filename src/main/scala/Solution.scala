@@ -3,9 +3,120 @@ object Solution {
   def main(args: Array[String]): Unit = {
     //    println(permute(Array(1, 1, 2)))
     //    println(permuteUnique(Array(1, 1,2,2)))
+    //    println(trap(Array(0,1,0,2,1,0,1,3,2,1,2,1)))
+//
+//    val node1 = new ListNode(1)
+//    val node2 = new ListNode(0)
+//    val node3 = new ListNode(1)
+//
+//    node1.next = node2
+//    node2.next = node3
+//
+//    println(getDecimalValue(node1))
 
+    println(rob(Array(1,2,3,1)))
 
   }
+
+  /**
+    * You are a professional robber planning to rob houses along a street.
+    * Each house has a certain amount of money stashed.
+    * All houses at this place are arranged in a circle.
+    * That means the first house is the neighbor of the last one.
+    * Meanwhile, adjacent houses have a security system connected, and it will automatically contact the police if two adjacent houses were broken into on the same night.
+    *
+    * Given a list of non-negative integers nums representing the amount of money of each house,
+    * return the maximum amount of money you can rob tonight without alerting the police.
+    * Input: nums = [1,2,3,1]
+    * Output: 4
+    * Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+    * Total amount you can rob = 1 + 3 = 4.
+    *
+    * 来源：力扣（LeetCode）
+    * 链接：https://leetcode-cn.com/problems/house-robber-ii
+    * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+    *
+    * @param nums
+    * @return
+    */
+  def rob(nums: Array[Int]): Int = {
+    if (nums.length == 1) return nums(0)
+    val n: Int = nums.length
+
+    val dp: Array[Int] = Array.ofDim[Int](n)
+
+    // rob without last
+    dp(0) = nums(0)
+    dp(1) = math.max(nums(0), nums(1))
+    var i = 2
+    while (i < n - 1) {
+      dp(i) = math.max(dp(i - 1), dp(i - 2) + nums(i))
+      i += 1
+    }
+    val max1 = dp(n - 2)
+
+    // rob without head
+    dp(0) = 0
+    dp(1) = nums(1)
+    i = 2
+    while (i < n) {
+      dp(i) = math.max(dp(i - 1), dp(i - 2) + nums(i))
+      i += 1
+    }
+
+    math.max(max1, dp(n - 1))
+  }
+
+  /**
+    * https://leetcode-cn.com/problems/convert-binary-number-in-a-linked-list-to-integer/
+    *
+    * Given head which is a reference node to a singly-linked list. The value of each node in the linked list is either 0 or 1. The linked list holds the binary representation of a number.
+    * Return the decimal value of the number in the linked list.
+    * Input: head = [1,0,1]
+    * Output: 5
+    * Explanation: (101) in base 2 = (5) in base 10
+    *
+    * @param head
+    * @return
+    */
+  def getDecimalValue(head: ListNode): Int = {
+    var node: ListNode = head
+    var s = 0
+    while (node != null) {
+      s = (s << 1) + node.x
+      node = node.next
+    }
+    s
+  }
+
+  /**
+    * https://leetcode-cn.com/problems/trapping-rain-water/
+    * Given n non-negative integers representing an elevation map where the width of each bar is 1,
+    * compute how much water it is able to trap after raining.
+    *
+    * Input: [0,1,0,2,1,0,1,3,2,1,2,1]
+    * Output: 6
+    *
+    * @param height array of heights
+    * @return
+    */
+  def trap(height: Array[Int]): Int = {
+    if (height.length <= 2) return 0
+    var water = 0
+    var h1 = 0
+    var h2 = 0
+    var i = 0
+    while (i < height.length) {
+
+      h1 = math.max(h1, height(i))
+      h2 = math.max(h2, height(height.length - i - 1))
+      water = water + h1 + h2
+      i += 1
+    }
+
+    water - height.length * h1 - height.sum
+  }
+
 
   /**
     * https://leetcode.com/problems/permutations-ii/
@@ -24,7 +135,7 @@ object Solution {
       val num: Int = nums(pos)
       var result = List[List[Int]]()
       permutaion.foreach(
-        (list: List[Int]) =>{
+        (list: List[Int]) => {
           var jumped = false
           for (i <- 0 until pos + 1) {
             if (nums(i) != num) {
@@ -33,7 +144,7 @@ object Solution {
                 list.take(i) ::: List(num) ::: list.takeRight(pos - i)
               )
             }
-            else if (!jumped){
+            else if (!jumped) {
               jumped = true
               result = result ::: List(list.take(i) ::: List(num) ::: list.takeRight(pos - i))
             }
