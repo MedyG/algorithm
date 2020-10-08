@@ -4,18 +4,76 @@ object Solution {
     //    println(permute(Array(1, 1, 2)))
     //    println(permuteUnique(Array(1, 1,2,2)))
     //    println(trap(Array(0,1,0,2,1,0,1,3,2,1,2,1)))
-//
-//    val node1 = new ListNode(1)
-//    val node2 = new ListNode(0)
-//    val node3 = new ListNode(1)
-//
-//    node1.next = node2
-//    node2.next = node3
-//
-//    println(getDecimalValue(node1))
+    //
+    //    val node1 = new ListNode(1)
+    //    val node2 = new ListNode(0)
+    //    val node3 = new ListNode(1)
+    //
+    //    node1.next = node2
+    //    node2.next = node3
+    //
+    //    println(getDecimalValue(node1))
 
-    println(rob(Array(1,2,3,1)))
+    //    println(rob(Array(1,2,3,1)))
 
+//    println(combinationSum(Array(2, 7, 6, 3, 5, 1), 9))
+
+
+
+  }
+
+
+  /**
+    * Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
+    * The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.
+    * It is guaranteed that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
+    *
+    * Example 1:
+    *
+    * Input: candidates = [2,3,6,7], target = 7
+    * Output: [[2,2,3],[7]]
+    * Explanation:
+    * 2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+    * 7 is a candidate, and 7 = 7.
+    * These are the only two combinations.
+    *
+    * 来源：力扣（LeetCode）
+    * 链接：https://leetcode-cn.com/problems/combination-sum
+    * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+    *
+    * @param candidates
+    * @param target
+    * @return
+    */
+  def combinationSum(candidates: Array[Int], target: Int): List[List[Int]] = {
+
+    // sort the candidates to make sure they are increasing
+    //    scala.util.Sorting.quickSort(candidates)
+    val candidatesSorted: Array[Int] = candidates.sorted
+    var combinations: List[List[Int]] = List[List[Int]]()
+
+    // backtracking
+    def helper(i: Int, remain: Int, res: List[Int]): Unit = {
+      // exit
+      if (i > candidatesSorted.length - 1) return
+
+      // look up candidates
+      var j: Int = i
+      while (j < candidatesSorted.length) {
+        remain - candidatesSorted(j) match {
+          // pruning
+          case d if d < 0 => j = candidatesSorted.length
+          // match target
+          case d if d == 0 => combinations = (candidatesSorted(j) :: res) :: combinations
+          // keep searching
+          case d if d > 0 => helper(j, d, candidatesSorted(j) :: res)
+        }
+        j += 1
+      }
+    }
+
+    helper(0, target, Nil)
+    combinations
   }
 
   /**
