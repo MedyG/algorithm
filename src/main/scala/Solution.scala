@@ -18,8 +18,55 @@ object Solution {
 
     //    println(combinationSum(Array(2, 7, 6, 3, 5, 1), 9))
 
-    (1 to 10).foreach(i => println(countAndSay(i)))
+    //    (1 to 10).foreach(i => println(countAndSay(i)))
 
+    val n1 = new ListNode(0)
+    val n2 = new ListNode(1)
+    val n3 = new ListNode(2)
+    val n4 = new ListNode(3)
+    n1.next = n2
+    n2.next = n3
+    n3.next = n4
+    n4.next = n2
+
+    println(hasCycle(n1))
+    println(hasCycle(null))
+
+  }
+
+  /**
+    * Given head, the head of a linked list, determine if the linked list has a cycle in it.
+    * There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer.
+    * Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.
+    * Return true if there is a cycle in the linked list. Otherwise, return false.
+    *
+    * Follow up:
+    * Can you solve it using O(1) (i.e. constant) memory?
+    *
+    * Input: head = [3,2,0,-4], pos = 1
+    * Output: true
+    * Explanation: There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).
+    *
+    * 来源：力扣（LeetCode）
+    * 链接：https://leetcode-cn.com/problems/linked-list-cycle
+    * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+    *
+    * @param head
+    * @return
+    */
+  def hasCycle(head: ListNode): Boolean = {
+    if (head == null || head.next == null) return false
+    var fast: ListNode = head.next
+    var slow: ListNode = head
+
+    while (fast != slow) {
+      if (fast == null || fast.next == null) return false
+
+      fast = fast.next.next
+      slow = slow.next
+    }
+
+    true
   }
 
 
@@ -42,7 +89,7 @@ object Solution {
     */
   def countAndSay(n: Int): String = {
 
-    def count(s:String): String = {
+    def count(s: String): String = {
       var say = ""
       var cnt = 1
       var c: Char = s(0)
@@ -59,6 +106,7 @@ object Solution {
       say += cnt.toString + c
       say
     }
+
     var say = "1"
     var i = 1
     while (i < n) {
@@ -113,7 +161,7 @@ object Solution {
   def numTriplets(nums1: Array[Int], nums2: Array[Int]): Int = {
 
     def triplets(nums1: Array[Int], nums2: Array[Int]): Int = {
-      var square:Map[Long, Int] = Map()
+      var square: Map[Long, Int] = Map()
       nums1.foreach((num: Int) => {
         val sq: Long = num * num.toLong
         square ++= Map(sq -> (1 + square.getOrElse(sq, 0)))
