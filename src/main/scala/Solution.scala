@@ -18,12 +18,55 @@ object Solution {
 
     //    println(combinationSum(Array(2, 7, 6, 3, 5, 1), 9))
 
-    val s = "aa".toArray
-    reverseString(s)
-    println(s.mkString(","))
+    (1 to 10).foreach(i => println(countAndSay(i)))
 
   }
 
+
+  /**
+    * 1 is read off as "one 1" or 11.
+    * 11 is read off as "two 1s" or 21.
+    * 21 is read off as "one 2, then one 1" or 1211.
+    *
+    * Given an integer n where 1 ≤ n ≤ 30, generate the nth term of the count-and-say sequence.
+    * You can do so recursively, in other words from the previous member read off the digits, counting the number of digits in groups of the same digit.
+    *
+    * Note: Each term of the sequence of integers will be represented as a string.
+    *
+    * 来源：力扣（LeetCode）
+    * 链接：https://leetcode-cn.com/problems/count-and-say
+    * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+    *
+    * @param n
+    * @return
+    */
+  def countAndSay(n: Int): String = {
+
+    def count(s:String): String = {
+      var say = ""
+      var cnt = 1
+      var c: Char = s(0)
+      var i = 1
+      while (i < s.length) {
+        if (s(i) == c) cnt += 1
+        else {
+          say += cnt.toString + c
+          c = s(i)
+          cnt = 1
+        }
+        i += 1
+      }
+      say += cnt.toString + c
+      say
+    }
+    var say = "1"
+    var i = 1
+    while (i < n) {
+      say = count(say)
+      i += 1
+    }
+    say
+  }
 
   /**
     * Write a function that reverses a string. The input string is given as an array of characters char[].
